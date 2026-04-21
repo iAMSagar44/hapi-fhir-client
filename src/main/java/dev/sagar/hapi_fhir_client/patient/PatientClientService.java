@@ -53,6 +53,12 @@ public class PatientClientService {
         String getPatientByFamilyNameAndDOB(String familyName, String dob) {
                 logger.info("Fetching patient with family name: {} and DOB: {}", familyName, dob);
 
+                if (familyName == null || familyName.isEmpty() || dob == null || dob.isEmpty()) {
+                        logger.warn("Family name or date of birth is missing");
+                        throw new IllegalArgumentException(
+                                        "Family name and date of birth must be provided");
+                }
+
                 Bundle patientResource = this.fhirClient.search().forResource(Patient.class)
                                 .where(Patient.FAMILY.matches().value(familyName))
                                 .and(Patient.BIRTHDATE.exactly().day(dob))

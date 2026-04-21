@@ -1,0 +1,41 @@
+package dev.sagar.hapi_fhir_client.observation;
+
+import org.hl7.fhir.r4.model.Bundle;
+import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.Patient;
+import org.springframework.stereotype.Service;
+import ca.uhn.fhir.context.FhirContext;
+import ca.uhn.fhir.rest.client.api.IGenericClient;
+
+@Service
+public class ObservationClientService {
+        private static final org.slf4j.Logger logger =
+                        org.slf4j.LoggerFactory.getLogger(ObservationClientService.class);
+
+        private final IGenericClient fhirClient;
+        private final FhirContext fhirContext;
+
+        private static final String MEDICARE_IDENTIFIER_SYSTEM =
+                        "http://ns.electronichealth.net.au/id/medicare-number";
+
+        public ObservationClientService(IGenericClient fhirClient, FhirContext fhirContext) {
+                this.fhirClient = fhirClient;
+                this.fhirContext = fhirContext;
+        }
+
+        // Retrieve observations of a patient by Medicare Card number identifier
+        // Example Identifier: http://ns.electronichealth.net.au/id/medicare-number|1234567890
+        String getObservationsByIdentifier(String identifier) {
+                logger.info("Fetching observations with identifier: {}", identifier);
+                Bundle observationBundle = this.fhirClient.search().forResource(Observation.class)
+                                .where(Observation.PATIENT.hasChainedProperty(
+                                                Patient.IDENTIFIER.exactly().systemAndIdentifier(
+                                                                MEDICARE_IDENTIFIER_SYSTEM,
+                                                                identifier)))
+                                .returnBundle(Bundle.class).execute();
+                return fhirContext.newJsonParser().setPrettyPrint(true)
+                                .encodeResourceToString(observationBundle);
+
+        }
+
+}
