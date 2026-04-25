@@ -6,6 +6,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.springframework.stereotype.Service;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import static dev.sagar.hapi_fhir_client.config.IdentifierSystem.forIdentifier;
 
 @Service
 public class AllergyIntoleranceClientService {
@@ -14,9 +15,6 @@ public class AllergyIntoleranceClientService {
 
         private final IGenericClient fhirClient;
         private final FhirContext fhirContext;
-
-        private static final String MEDICARE_IDENTIFIER_SYSTEM =
-                        "http://ns.electronichealth.net.au/id/medicare-number";
 
         public AllergyIntoleranceClientService(IGenericClient fhirClient, FhirContext fhirContext) {
                 this.fhirClient = fhirClient;
@@ -32,7 +30,7 @@ public class AllergyIntoleranceClientService {
                                 .forResource(AllergyIntolerance.class)
                                 .where(AllergyIntolerance.PATIENT.hasChainedProperty(
                                                 Patient.IDENTIFIER.exactly().systemAndIdentifier(
-                                                                MEDICARE_IDENTIFIER_SYSTEM,
+                                                                forIdentifier(identifier),
                                                                 identifier)))
                                 .and(AllergyIntolerance.CLINICAL_STATUS.exactly().code("active"))
                                 .returnBundle(Bundle.class).execute();

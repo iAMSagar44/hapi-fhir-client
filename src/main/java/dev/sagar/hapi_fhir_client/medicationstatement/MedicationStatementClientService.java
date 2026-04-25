@@ -6,6 +6,7 @@ import org.hl7.fhir.r4.model.Patient;
 import org.springframework.stereotype.Service;
 import ca.uhn.fhir.context.FhirContext;
 import ca.uhn.fhir.rest.client.api.IGenericClient;
+import static dev.sagar.hapi_fhir_client.config.IdentifierSystem.forIdentifier;
 
 @Service
 public class MedicationStatementClientService {
@@ -14,9 +15,6 @@ public class MedicationStatementClientService {
 
         private final IGenericClient fhirClient;
         private final FhirContext fhirContext;
-
-        private static final String MEDICARE_IDENTIFIER_SYSTEM =
-                        "http://ns.electronichealth.net.au/id/medicare-number";
 
         public MedicationStatementClientService(IGenericClient fhirClient,
                         FhirContext fhirContext) {
@@ -32,7 +30,7 @@ public class MedicationStatementClientService {
                                 .forResource(MedicationStatement.class)
                                 .where(MedicationStatement.PATIENT.hasChainedProperty(
                                                 Patient.IDENTIFIER.exactly().systemAndIdentifier(
-                                                                MEDICARE_IDENTIFIER_SYSTEM,
+                                                                forIdentifier(identifier),
                                                                 identifier)))
                                 .returnBundle(Bundle.class).execute();
                 return fhirContext.newJsonParser().setPrettyPrint(true)
