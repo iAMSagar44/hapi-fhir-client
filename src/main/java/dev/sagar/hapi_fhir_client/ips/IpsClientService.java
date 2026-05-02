@@ -13,6 +13,7 @@ import org.hl7.fhir.r4.model.CodeableConcept;
 import org.hl7.fhir.r4.model.Coding;
 import org.hl7.fhir.r4.model.Composition;
 import org.hl7.fhir.r4.model.Condition;
+import org.hl7.fhir.r4.model.Encounter;
 import org.hl7.fhir.r4.model.Identifier;
 import org.hl7.fhir.r4.model.Immunization;
 import org.hl7.fhir.r4.model.Medication;
@@ -58,6 +59,7 @@ public class IpsClientService {
     private static final int IDX_LABS = 5;
     private static final int IDX_IMMUNIZATIONS = 6;
     private static final int IDX_PROCEDURES = 7;
+    private static final int IDX_ENCOUNTERS = 8;
 
     private final IGenericClient fhirClient;
     private final FhirContext fhirContext;
@@ -73,7 +75,8 @@ public class IpsClientService {
     private record ParsedData(Patient patient, List<Condition> conditions,
             List<MedicationRequest> medicationRequests, List<Medication> medications,
             List<AllergyIntolerance> allergies, List<Observation> vitalSigns,
-            List<Observation> labs, List<Immunization> immunizations, List<Procedure> procedures) {
+            List<Observation> labs, List<Immunization> immunizations, List<Procedure> procedures,
+            List<Encounter> encounters) {
     }
 
     // ── Public API ────────────────────────────────────────────────────────────
@@ -141,7 +144,8 @@ public class IpsClientService {
                 extractResourcesFromEntry(batchResponse, IDX_VITALS, Observation.class),
                 extractResourcesFromEntry(batchResponse, IDX_LABS, Observation.class),
                 extractResourcesFromEntry(batchResponse, IDX_IMMUNIZATIONS, Immunization.class),
-                extractResourcesFromEntry(batchResponse, IDX_PROCEDURES, Procedure.class));
+                extractResourcesFromEntry(batchResponse, IDX_PROCEDURES, Procedure.class),
+                extractResourcesFromEntry(batchResponse, IDX_ENCOUNTERS, Encounter.class));
     }
 
     private <T extends Resource> List<T> extractResourcesFromEntry(Bundle batchResponse, int index,
@@ -184,6 +188,7 @@ public class IpsClientService {
         data.labs().forEach(r -> map.put(r, newUrn()));
         data.immunizations().forEach(r -> map.put(r, newUrn()));
         data.procedures().forEach(r -> map.put(r, newUrn()));
+        data.encounters().forEach(r -> map.put(r, newUrn()));
         return map;
     }
 
@@ -197,6 +202,9 @@ public class IpsClientService {
                 .addCoding(new Coding(LOINC_SYSTEM, "60591-5", "Patient summary Document")));
         comp.setSubject(new Reference(uuidMap.get(data.patient())));
         comp.addAuthor(new Reference(uuidMap.get(data.patient())));
+        if (!data.encounters().isEmpty()) {
+            comp.setEncounter(new Reference(uuidMap.get(data.encounters().get(0))));
+        }
 
         // Mandatory sections (always present; emptyReason if no data)
         addSection(comp, buildSection("Allergies and Intolerances", "48765-2", data.allergies(),
@@ -263,6 +271,7 @@ public class IpsClientService {
         data.labs().forEach(r -> addEntry(bundle, uuidMap.get(r), r));
         data.immunizations().forEach(r -> addEntry(bundle, uuidMap.get(r), r));
         data.procedures().forEach(r -> addEntry(bundle, uuidMap.get(r), r));
+        data.encounters().forEach(r -> addEntry(bundle, uuidMap.get(r), r));
 
         return bundle;
     }
