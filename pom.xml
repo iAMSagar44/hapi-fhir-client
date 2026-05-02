@@ -73,6 +73,27 @@
 			<version>${hapifhir_version}</version>
 		</dependency>
 
+		<!-- FHIR validation framework -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-validation</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
+		<!-- Bundled R4 StructureDefinitions and ValueSets for validation -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-validation-resources-r4</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
+		<!-- Cache provider required by CachingValidationSupport -->
+		<dependency>
+			<groupId>ca.uhn.hapi.fhir</groupId>
+			<artifactId>hapi-fhir-caching-caffeine</artifactId>
+			<version>${hapifhir_version}</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

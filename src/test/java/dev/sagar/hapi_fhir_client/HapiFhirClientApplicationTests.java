@@ -12,6 +12,8 @@ import dev.sagar.hapi_fhir_client.medicationrequest.MedicationRequestClientContr
 import dev.sagar.hapi_fhir_client.medicationrequest.MedicationRequestClientService;
 import dev.sagar.hapi_fhir_client.medicationstatement.MedicationStatementClientController;
 import dev.sagar.hapi_fhir_client.medicationstatement.MedicationStatementClientService;
+import dev.sagar.hapi_fhir_client.ips.IpsClientController;
+import dev.sagar.hapi_fhir_client.ips.IpsClientService;
 import dev.sagar.hapi_fhir_client.observation.ObservationClientController;
 import dev.sagar.hapi_fhir_client.observation.ObservationClientService;
 
@@ -48,6 +50,12 @@ class HapiFhirClientApplicationTests {
 	@Autowired
 	private ObservationClientService observationClientService;
 
+	@Autowired
+	private IpsClientController ipsClientController;
+
+	@Autowired
+	private IpsClientService ipsClientService;
+
 	@Test
 	void contextLoads() {
 		assertNotNull(conditionClientController);
@@ -60,6 +68,8 @@ class HapiFhirClientApplicationTests {
 		assertNotNull(medicationStatementClientService);
 		assertNotNull(observationClientController);
 		assertNotNull(observationClientService);
+		assertNotNull(ipsClientController);
+		assertNotNull(ipsClientService);
 	}
 
 }
