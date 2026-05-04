@@ -30,7 +30,7 @@ public class ObservationClientService {
                                                 Patient.IDENTIFIER.exactly().systemAndIdentifier(
                                                                 forIdentifier(identifier),
                                                                 identifier)))
-                                .returnBundle(Bundle.class).execute();
+                                .count(30).returnBundle(Bundle.class).execute();
                 return fhirContext.newJsonParser().setPrettyPrint(true)
                                 .encodeResourceToString(observationBundle);
 
