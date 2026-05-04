@@ -16,6 +16,8 @@ import dev.sagar.hapi_fhir_client.ips.IpsClientController;
 import dev.sagar.hapi_fhir_client.ips.IpsClientService;
 import dev.sagar.hapi_fhir_client.observation.ObservationClientController;
 import dev.sagar.hapi_fhir_client.observation.ObservationClientService;
+import dev.sagar.hapi_fhir_client.careteam.CareTeamClientController;
+import dev.sagar.hapi_fhir_client.careteam.CareTeamClientService;
 
 @SpringBootTest
 class HapiFhirClientApplicationTests {
@@ -51,6 +53,12 @@ class HapiFhirClientApplicationTests {
 	private ObservationClientService observationClientService;
 
 	@Autowired
+	private CareTeamClientController careTeamClientController;
+
+	@Autowired
+	private CareTeamClientService careTeamClientService;
+
+	@Autowired
 	private IpsClientController ipsClientController;
 
 	@Autowired
@@ -68,6 +76,8 @@ class HapiFhirClientApplicationTests {
 		assertNotNull(medicationStatementClientService);
 		assertNotNull(observationClientController);
 		assertNotNull(observationClientService);
+		assertNotNull(careTeamClientController);
+		assertNotNull(careTeamClientService);
 		assertNotNull(ipsClientController);
 		assertNotNull(ipsClientService);
 	}

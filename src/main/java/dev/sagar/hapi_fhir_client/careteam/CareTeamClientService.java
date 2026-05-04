@@ -1,7 +1,7 @@
-package dev.sagar.hapi_fhir_client.observation;
+package dev.sagar.hapi_fhir_client.careteam;
 
 import org.hl7.fhir.r4.model.Bundle;
-import org.hl7.fhir.r4.model.Observation;
+import org.hl7.fhir.r4.model.CareTeam;
 import org.hl7.fhir.r4.model.Patient;
 import org.springframework.stereotype.Service;
 import ca.uhn.fhir.context.FhirContext;
@@ -9,30 +9,30 @@ import ca.uhn.fhir.rest.client.api.IGenericClient;
 import static dev.sagar.hapi_fhir_client.config.IdentifierSystem.forIdentifier;
 
 @Service
-public class ObservationClientService {
+public class CareTeamClientService {
         private static final org.slf4j.Logger logger =
-                        org.slf4j.LoggerFactory.getLogger(ObservationClientService.class);
+                        org.slf4j.LoggerFactory.getLogger(CareTeamClientService.class);
 
         private final IGenericClient fhirClient;
         private final FhirContext fhirContext;
 
-        public ObservationClientService(IGenericClient fhirClient, FhirContext fhirContext) {
+        public CareTeamClientService(IGenericClient fhirClient, FhirContext fhirContext) {
                 this.fhirClient = fhirClient;
                 this.fhirContext = fhirContext;
         }
 
-        // Retrieve observations of a patient by Medicare Card number identifier
+        // Retrieve care teams of a patient by Medicare Card number identifier
         // Example Identifier: http://ns.electronichealth.net.au/id/medicare-number|1234567890
-        String getObservationsByIdentifier(String identifier) {
-                logger.info("Fetching observations with identifier: {}", identifier);
-                Bundle observationBundle = this.fhirClient.search().forResource(Observation.class)
-                                .where(Observation.PATIENT.hasChainedProperty(
+        String getCareTeamsByIdentifier(String identifier) {
+                logger.info("Fetching care teams with identifier: {}", identifier);
+                Bundle careTeamBundle = this.fhirClient.search().forResource(CareTeam.class)
+                                .where(CareTeam.PATIENT.hasChainedProperty(
                                                 Patient.IDENTIFIER.exactly().systemAndIdentifier(
                                                                 forIdentifier(identifier),
                                                                 identifier)))
-                                .count(40).returnBundle(Bundle.class).execute();
+                                .returnBundle(Bundle.class).execute();
                 return fhirContext.newJsonParser().setPrettyPrint(true)
-                                .encodeResourceToString(observationBundle);
+                                .encodeResourceToString(careTeamBundle);
 
         }
 
