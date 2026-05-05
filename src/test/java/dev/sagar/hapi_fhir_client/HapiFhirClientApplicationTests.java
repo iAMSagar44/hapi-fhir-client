@@ -16,8 +16,13 @@ import dev.sagar.hapi_fhir_client.ips.IpsClientController;
 import dev.sagar.hapi_fhir_client.ips.IpsClientService;
 import dev.sagar.hapi_fhir_client.observation.ObservationClientController;
 import dev.sagar.hapi_fhir_client.observation.ObservationClientService;
+import dev.sagar.hapi_fhir_client.task.TaskClientController;
+import dev.sagar.hapi_fhir_client.task.TaskClientService;
 import dev.sagar.hapi_fhir_client.careteam.CareTeamClientController;
 import dev.sagar.hapi_fhir_client.careteam.CareTeamClientService;
+
+import dev.sagar.hapi_fhir_client.goal.GoalClientController;
+import dev.sagar.hapi_fhir_client.goal.GoalClientService;
 
 @SpringBootTest
 class HapiFhirClientApplicationTests {
@@ -53,10 +58,22 @@ class HapiFhirClientApplicationTests {
 	private ObservationClientService observationClientService;
 
 	@Autowired
+	private TaskClientController taskClientController;
+
+	@Autowired
+	private TaskClientService taskClientService;
+
+	@Autowired
 	private CareTeamClientController careTeamClientController;
 
 	@Autowired
 	private CareTeamClientService careTeamClientService;
+
+	@Autowired
+	private GoalClientController goalClientController;
+
+	@Autowired
+	private GoalClientService goalClientService;
 
 	@Autowired
 	private IpsClientController ipsClientController;
@@ -76,8 +93,12 @@ class HapiFhirClientApplicationTests {
 		assertNotNull(medicationStatementClientService);
 		assertNotNull(observationClientController);
 		assertNotNull(observationClientService);
+		assertNotNull(taskClientController);
+		assertNotNull(taskClientService);
 		assertNotNull(careTeamClientController);
 		assertNotNull(careTeamClientService);
+		assertNotNull(goalClientController);
+		assertNotNull(goalClientService);
 		assertNotNull(ipsClientController);
 		assertNotNull(ipsClientService);
 	}
